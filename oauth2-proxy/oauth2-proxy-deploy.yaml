@@ -1,0 +1,69 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  labels:
+    k8s-app: oauth2-proxy
+  name: oauth2-proxy
+  namespace: k8-booster-oauth2
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      k8s-app: oauth2-proxy
+  template:
+    metadata:
+      labels:
+        k8s-app: oauth2-proxy
+    spec:
+      containers:
+      - args:
+        - --provider=oidc
+        - --oidc-issuer-url=https://idcs-123456789xxxxxxxxxxxxxxxxxxxxx.identity.oraclecloud.com/
+        - --insecure-oidc-skip-issuer-verification=true
+        - --insecure-oidc-allow-unverified-email=true
+        - --insecure-oidc-skip-nonce=true
+        - --scope=openid profile email
+        - --email-domain=*
+        - --upstream=static://200
+        - --http-address=0.0.0.0:4180
+        env:
+        - name: OAUTH2_PROXY_CLIENT_ID
+          value: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" 
+        - name: OAUTH2_PROXY_CLIENT_SECRET
+          value: "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" 
+        - name: OAUTH2_PROXY_COOKIE_SECRET
+          value: "xxxxxxxxxxxxxxx"
+        image: quay.io/oauth2-proxy/oauth2-proxy:latest
+        imagePullPolicy: Always
+        name: oauth2-proxy
+        ports:
+        - containerPort: 4180
+          protocol: TCP
+        resources:
+          limits:
+            cpu: 100m
+            memory: 128Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+
+
+---
+
+apiVersion: v1
+kind: Service
+metadata:
+  labels:
+    k8s-app: oauth2-proxy
+  name: oauth2-proxy
+  namespace: k8-booster-oauth2
+spec:
+  ports:
+  - name: http
+    port: 4180
+    protocol: TCP
+    targetPort: 4180
+  selector:
+    k8s-app: oauth2-proxy
+
+

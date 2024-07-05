@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  annotations:
+    kubernetes.io/ingress.class: nginx
+    nginx.ingress.kubernetes.io/ssl-redirect: "true"
+    nginx.ingress.kubernetes.io/auth-url: "https://$host/oauth2/auth"
+    nginx.ingress.kubernetes.io/auth-signin: "https://$host/oauth2/start?rd=$escaped_request_uri"
+  name: backend-app-ingress
+  namespace: k8-booster-oauth2
+spec:
+  tls:
+  - hosts:
+    - testingress.fernando.devrocks.io
+    secretName: testingress-tls-secret
+  rules:
+  - host: testingress.fernando.devrocks.io
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: cloudnativebasicspring-service
+            port:
+              number: 80

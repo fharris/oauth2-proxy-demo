@@ -1,2 +1,2 @@
-# oauth2-proxy-demo
-exploring oauth2-proxy , nginx ingress controller and kubernetes
+# pythorch-oke
+exploring a simple deployment, service and ingress configuration for pytorch on OKE
