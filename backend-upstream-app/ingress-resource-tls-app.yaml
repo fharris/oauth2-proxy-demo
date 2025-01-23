@@ -12,7 +12,7 @@ spec:
   tls:
   - hosts:
     - testingress.fernando.devrocks.io
-    secretName: testingress-tls-secret
+    secretName: testingress-tls-secret #you need to create the secret first!
   rules:
   - host: testingress.fernando.devrocks.io
     http:
